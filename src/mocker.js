@@ -1,6 +1,6 @@
 const { loadAndSetUserConfigurations, config } = require('./config');
 const { processVocabulary } = require('./vocabulary');
-const { generateCases, generateEvents } = require('./data');
+const { generateCases, generateEvents, generateEventsThreaded} = require('./data');
 const { saveToCSV, saveToSQL, saveSqlSchema } = require('./output');
 const { generateSchemaSql } = require('./sql_generator');
 const util = require('./util');
@@ -11,12 +11,10 @@ async function main() {
   const vocabulary = processVocabulary();
 
   const cases = generateCases(config.NUMBER_OF_CASES);
-  const events = generateEvents(cases);
-
+  const events = await generateEventsThreaded(cases);
   if (config.SHOW_PROGRESS) {
     console.log('Writing data to files.');
   }
-
   if (config.OUTPUT_FORMAT === 'csv') {
     saveToCSV(`out/${fileNameForCases()}.csv`, cases);
     saveToCSV(`out/${fileNameForEvents(events.length)}.csv`, events);

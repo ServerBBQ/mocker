@@ -19,4 +19,27 @@ function formatNumber(num, precision = 2) {
   return num;
 }
 
-module.exports = { formatNumber };
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function splitArrayIntoPieces(arr, x) {
+  if (x <= 0) {
+    throw new Error('The value of x must be greater than zero.');
+  }
+  
+  const result = [];
+  const length = arr.length;
+  const pieceSize = Math.ceil(length / x);
+
+  arr = [...arr] //prevent arr being set to [] on outside code
+
+  for (let i = 0; i < x; i++) {
+    const piece = arr.splice(0, pieceSize);
+    result.push(piece);
+  }
+
+  return result;
+}
+
+module.exports = { formatNumber, sleep, splitArrayIntoPieces };
